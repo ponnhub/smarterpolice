@@ -1,0 +1,81 @@
+@startuml
+
+|#LightGoldenRodYellow|H|หัวหน้าสายตรวจ
+skinparam defaultFontName "TH SarabunPSK"
+
+start
+
+#LightBlue:ก่อนออกตรวจ (INPUT);
+fork
+  repeat
+    :เตรียมอาวุธและอุปกรณ์ ยานพาหนะ;
+  repeat while (ครบ?) is (ไม่)
+  ->พร้อม;
+fork again
+  :เรียกแถวประชุมนอกห้องปฏิบัติการสายตรวจ;
+  :เรียกประชุมในห้องปฏิบัติการสายตรวจ;
+  :บันทึกข้อราชการที่ชี้แจงในสมุดปล่อยแถวสายตรวจ;
+fork again
+  |#LightSteelBlue|C|สายตรวจรถยนต์
+  :เข้าร่วมประชุม;
+fork again
+  |#DarkKhaki|B|สายตรวจรถ จยย.
+  :เข้าร่วมประชุม;
+  |H|
+end fork {ปฏิบัติครบ}
+
+#Orange:ออกตรวจ (PROCESS);
+
+split
+  |H|
+  repeat
+    :ประกอบกำลัง;
+  repeat while  (>= 2) is (ไม่)
+  ->ออกตรวจ;
+  split
+    partition ตรวจจุดตรวจตู้แดง {
+      repeat
+        fork
+          :ลงชื่อ;
+        end fork
+        backward: ทุก 8 ชั่วโมง;
+      repeat while (อยู่ในผลัด) is (ใช่)
+
+    }
+
+  end split
+split again
+  |C|
+  repeat
+    :ประกอบกำลัง;
+  repeat while  (>= 2) is (ไม่)
+  ->ออกตรวจ;
+
+split again
+  |B|
+  repeat
+    :ประกอบกำลัง;
+  repeat while (=2) is (ไม่)
+  ->ออกตรวจ;
+
+  partition ตรวจตู้แดง {
+
+    repeat
+      if (ติดภารกิจ) then (ติด)
+        :แจ้งหัวหน้าสาย;
+        :แจ้งศูนย์วิทยุ;
+        break
+        else (ไม่ติด)
+          if (00:01-08:00น.) then (ใช่)
+          :เก็บ/วางสมุดตู้แดง;
+        endif
+        :ลงชื่อ;
+        endif
+        backward: ทุก 4 ชั่วโมง;
+      repeat while (อยู่ในผลัด) is (ใช่)
+
+    }
+  end split
+  |H|
+  stop
+  @enduml
